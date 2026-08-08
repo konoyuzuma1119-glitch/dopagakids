@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「ドパガキ」化する社会 ― デジタル社会研究レビュー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Shippori+Mincho:wght@500;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#ECE6D6;
+    --paper-deep:#E4DCC7;
+    --ink:#221E17;
+    --ink-soft:#5B5346;
+    --indigo:#233254;
+    --indigo-soft:#4C5F86;
+    --seal:#A23B2E;
+    --rule:#C6BC9F;
+    --rule-strong:#a99f83;
+    --serif:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+    --display:"Shippori Mincho","Noto Serif JP",serif;
+    --sans:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.35), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 3px);
+    color:var(--ink);
+    font-family:var(--serif);
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--indigo);color:var(--paper);}
+  a{color:var(--indigo);}
+
+  #progress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:var(--indigo);
+    z-index:200; transition:width .08s linear;
+  }
+
+  header.masthead{
+    border-bottom:1px solid var(--rule-strong);
+    background:linear-gradient(180deg, var(--paper-deep), var(--paper));
+  }
+  .masthead-inner{
+    max-width:1040px; margin:0 auto; padding:22px 28px 18px;
+    display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  .journal-name{
+    font-family:var(--sans); font-weight:700; letter-spacing:.14em;
+    font-size:13px; color:var(--indigo);
+  }
+  .journal-name span{color:var(--ink-soft); font-weight:500; letter-spacing:.08em; margin-left:10px;}
+  .masthead-meta{
+    font-family:var(--sans); font-size:12px; color:var(--ink-soft); letter-spacing:.04em;
+  }
+  .rule-thick{height:3px; background:var(--indigo); max-width:1040px; margin:0 auto;}
+
+  .page{
+    max-width:1040px; margin:0 auto; padding:0 28px;
+    display:grid; grid-template-columns:200px 1fr; gap:56px;
+    align-items:start;
+  }
+  nav.toc{
+    position:sticky; top:26px;
+    padding-top:52px;
+    font-family:var(--sans); font-size:13px;
+  }
+  nav.toc .toc-label{
+    font-size:11px; letter-spacing:.14em; color:var(--ink-soft); margin-bottom:12px;
+    text-transform:uppercase;
+  }
+  nav.toc ol{list-style:none; margin:0; padding:0; border-left:1px solid var(--rule); padding-left:16px;}
+  nav.toc li{margin-bottom:11px;}
+  nav.toc a{
+    color:var(--ink-soft); text-decoration:none; display:block; line-height:1.5;
+    transition:color .15s ease, transform .15s ease;
+  }
+  nav.toc a:hover{color:var(--indigo);}
+  nav.toc a.active{color:var(--seal); font-weight:600; transform:translateX(2px);}
+  nav.toc .kw{
+    margin-top:26px; padding-top:18px; border-top:1px solid var(--rule);
+  }
+  nav.toc .kw-label{font-size:11px; color:var(--ink-soft); letter-spacing:.1em; margin-bottom:8px;}
+  nav.toc .chip{
+    display:inline-block; font-size:11.5px; color:var(--indigo-soft);
+    border:1px solid var(--rule-strong); border-radius:2px; padding:2px 7px; margin:0 5px 5px 0;
+  }
+
+  main{padding-top:52px; padding-bottom:60px; min-width:0;}
+
+  .title-block{position:relative; margin-bottom:36px;}
+  .eyebrow{
+    font-family:var(--sans); font-size:12.5px; letter-spacing:.12em; color:var(--seal);
+    font-weight:600; margin-bottom:14px;
+  }
+  h1.title{
+    font-family:var(--display); font-weight:800; font-size:clamp(28px,4vw,42px);
+    line-height:1.45; margin:0 0 10px; color:var(--ink);
+  }
+  h1.title .term{color:var(--seal);}
+  h1.title small{
+    display:block; font-family:var(--serif); font-weight:500; font-size:.55em;
+    color:var(--ink-soft); margin-top:10px; line-height:1.6;
+  }
+
+  .byline{
+    font-family:var(--sans); font-size:13px; color:var(--ink-soft);
+    margin-top:20px; display:flex; gap:22px; flex-wrap:wrap;
+    border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);
+    padding:12px 0;
+  }
+  .byline dt{font-weight:600; color:var(--ink); display:inline;}
+  .byline dd{display:inline; margin:0 0 0 4px;}
+  .byline .field{white-space:nowrap;}
+
+  .stamp{
+    position:absolute; top:-8px; right:0;
+    width:92px; height:92px;
+    transform:rotate(-9deg);
+    opacity:.9;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+  }
+  .stamp svg{width:100%; height:100%;}
+
+  .abstract{
+    margin:34px 0 40px;
+    padding:22px 26px;
+    border-left:3px solid var(--indigo);
+    background:rgba(255,255,255,.28);
+  }
+  .abstract-label{
+    font-family:var(--sans); font-weight:700; font-size:12px; letter-spacing:.1em;
+    color:var(--indigo); margin-bottom:10px;
+  }
+  .abstract p{margin:0; font-size:15.5px; color:var(--ink);}
+
+  article section{margin-top:52px; scroll-margin-top:26px;}
+  article h2{
+    font-family:var(--display); font-size:22px; font-weight:700;
+    color:var(--indigo); margin:0 0 20px;
+    display:flex; align-items:baseline; gap:12px;
+  }
+  article h2 .num{
+    font-family:var(--sans); font-size:13px; color:var(--seal); font-weight:700;
+    border:1px solid var(--seal); border-radius:50%; width:24px; height:24px;
+    display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  article h3{
+    font-family:var(--sans); font-size:15px; font-weight:700; color:var(--ink);
+    margin:26px 0 12px; letter-spacing:.02em;
+  }
+  article h3::before{content:"— "; color:var(--rule-strong);}
+  article p{font-size:15.5px; text-align:justify; margin:0 0 20px; color:var(--ink);}
+  section#sec1 > p:first-of-type::first-letter{
+    font-family:var(--display); font-size:3.4em; float:left; line-height:.85;
+    padding:6px 8px 0 0; color:var(--indigo); font-weight:800;
+  }
+  .term-mark{color:var(--seal); font-weight:600;}
+
+  .note{
+    font-size:13px; color:var(--ink-soft); font-style:italic;
+    border-top:1px dashed var(--rule-strong); padding-top:12px; margin-top:8px;
+  }
+
+  .divider{display:flex; align-items:center; gap:14px; margin:52px 0 0; color:var(--rule-strong);}
+  .divider::before, .divider::after{content:""; flex:1; height:1px; background:var(--rule);}
+  .divider span{font-size:12px; letter-spacing:.3em; font-family:var(--sans);}
+
+  .refs{margin-top:26px;}
+  .refs ol{list-style:none; margin:0; padding:0; counter-reset:refcounter;}
+  .refs li{
+    counter-increment:refcounter;
+    font-size:14px; color:var(--ink); margin-bottom:14px; padding-left:34px; position:relative;
+  }
+  .refs li::before{
+    content:"["counter(refcounter)"]";
+    position:absolute; left:0; color:var(--seal); font-family:var(--sans); font-size:12.5px; font-weight:700;
+  }
+
+  /* reviewer counter tool */
+  .reviewer-box{
+    max-width:1040px; margin:70px auto 0; padding:0 28px;
+  }
+  .reviewer-panel{
+    border:1px solid var(--rule-strong);
+    background:repeating-linear-gradient(135deg, rgba(35,50,84,0.03) 0 10px, rgba(35,50,84,0.06) 10px 20px), rgba(255,255,255,.35);
+    border-radius:3px;
+    padding:30px 30px 26px;
+    text-align:center;
+    position:relative;
+  }
+  .reviewer-panel::before{
+    content:"PEER REVIEW";
+    position:absolute; top:12px; left:16px;
+    font-family:var(--sans); font-size:10px; letter-spacing:.22em; color:var(--rule-strong);
+  }
+  .reviewer-label{
+    font-family:var(--sans); font-size:13px; letter-spacing:.08em; color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .reviewer-count{
+    font-family:var(--display); font-weight:800; color:var(--indigo);
+    font-size:64px; line-height:1; margin:6px 0 4px;
+    font-variant-numeric:tabular-nums;
+    min-height:70px; display:flex; align-items:center; justify-content:center;
+  }
+  .reviewer-count.bump{animation:bump .3s ease;}
+  @keyframes bump{ 0%{transform:scale(1);} 40%{transform:scale(1.18);} 100%{transform:scale(1);} }
+  .reviewer-unit{font-family:var(--sans); font-size:13px; color:var(--ink-soft); margin-bottom:20px;}
+  .reviewer-btn{
+    font-family:var(--sans); font-size:13.5px; font-weight:600; letter-spacing:.03em;
+    background:var(--indigo); color:var(--paper); border:none; border-radius:2px;
+    padding:11px 22px; cursor:pointer; transition:background .15s ease, transform .1s ease;
+  }
+  .reviewer-btn:hover{background:var(--indigo-soft);}
+  .reviewer-btn:active{transform:scale(.97);}
+  .reviewer-btn:disabled{opacity:.55; cursor:default;}
+  .reviewer-note{
+    font-family:var(--sans); font-size:11.5px; color:var(--ink-soft); margin-top:14px; letter-spacing:.02em;
+  }
+  .reviewer-reset{
+    display:inline-block; margin-top:8px;
+    font-family:var(--sans); font-size:11px; color:var(--rule-strong);
+    background:none; border:none; text-decoration:underline; cursor:pointer;
+    letter-spacing:.02em;
+  }
+  .reviewer-reset:hover{color:var(--ink-soft);}
+
+  .reviewer-confirm{
+    margin-top:18px;
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height .25s ease, opacity .2s ease, margin .25s ease;
+  }
+  .reviewer-confirm.open{
+    max-height:120px; opacity:1;
+  }
+  .reviewer-confirm-q{
+    font-family:var(--serif); font-size:15px; color:var(--ink);
+    margin:0 0 12px;
+  }
+  .reviewer-confirm-actions{
+    display:flex; gap:10px; justify-content:center;
+  }
+  .reviewer-yes, .reviewer-no{
+    font-family:var(--sans); font-size:12.5px; font-weight:600;
+    border-radius:2px; padding:8px 16px; cursor:pointer; letter-spacing:.02em;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .reviewer-yes{background:var(--seal); color:var(--paper); border:1px solid var(--seal);}
+  .reviewer-yes:hover{background:#8b3226;}
+  .reviewer-no{background:transparent; color:var(--ink-soft); border:1px solid var(--rule-strong);}
+  .reviewer-no:hover{color:var(--ink); border-color:var(--ink-soft);}
+  .reviewer-yes:active, .reviewer-no:active{transform:scale(.97);}
+
+  .liar-msg{
+    font-family:var(--display); font-weight:800; font-size:20px; color:var(--seal);
+    margin:14px 0 0; opacity:0; transform:translateY(-4px) scale(.96);
+    transition:opacity .2s ease, transform .2s ease;
+    letter-spacing:.06em;
+  }
+  .liar-msg.show{opacity:1; transform:translateY(0) scale(1);}
+
+  html.inverted, html.inverted body{
+    filter:invert(1) hue-rotate(180deg);
+  }
+  html{transition:filter .35s ease;}
+
+  footer{
+    border-top:1px solid var(--rule-strong); margin-top:50px; padding:26px 28px 60px;
+    max-width:1040px; margin-left:auto; margin-right:auto;
+    font-family:var(--sans); font-size:12px; color:var(--ink-soft);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+
+  @media (max-width:820px){
+    .page{grid-template-columns:1fr; gap:0;}
+    nav.toc{
+      position:static; padding-top:0; margin-bottom:34px;
+      border:1px solid var(--rule); border-radius:2px; padding:16px 18px;
+      background:rgba(255,255,255,.3);
+    }
+    nav.toc ol{border-left:none; padding-left:0;}
+    main{padding-top:30px;}
+    .stamp{width:70px; height:70px; top:-4px;}
+    .reviewer-count{font-size:48px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+    .reviewer-count.bump{animation:none;}
+    html.inverted, html.inverted body{filter:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="journal-name">デジタル社会研究レビュー <span>Journal of Digital Society Studies</span></div>
+    <div class="masthead-meta">第12巻・第4号（オンライン版） ／ 提出日 2026年8月8日</div>
+  </div>
+</header>
+<div class="rule-thick"></div>
+
+<div class="page">
+
+  <nav class="toc" aria-label="目次">
+    <div class="toc-label">目次</div>
+    <ol>
+      <li><a href="#sec1">1. はじめに</a></li>
+      <li><a href="#sec2">2. 装置の設計者</a></li>
+      <li><a href="#sec3">3. 発達神経科学</a></li>
+      <li><a href="#sec4">4. 規制の歴史的遅延</a></li>
+      <li><a href="#sec5">5. 全世代への拡大</a></li>
+      <li><a href="#sec6">6. 結論</a></li>
+      <li><a href="#refs">参考文献</a></li>
+    </ol>
+    <div class="kw">
+      <div class="kw-label">KEYWORDS</div>
+      <span class="chip">ドパガキ</span>
+      <span class="chip">注意経済</span>
+      <span class="chip">ドーパミン</span>
+      <span class="chip">SNS依存</span>
+      <span class="chip">ガチャ</span>
+      <span class="chip">思春期脳発達</span>
+    </div>
+  </nav>
+
+  <main>
+    <div class="title-block">
+      <div class="eyebrow">総説論文 ・ REVIEW ARTICLE</div>
+      <h1 class="title">
+        <span class="term">「ドパガキ」</span>化する社会
+        <small>――注意経済がもたらす気づかれない依存の構造分析</small>
+      </h1>
+
+      <div class="stamp" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="#A23B2E" stroke-width="3.2"/>
+          <circle cx="50" cy="50" r="39" fill="none" stroke="#A23B2E" stroke-width="1"/>
+          <text x="50" y="42" text-anchor="middle" font-family="'Noto Serif JP',serif" font-size="15" fill="#A23B2E" font-weight="700">査読</text>
+          <text x="50" y="64" text-anchor="middle" font-family="'Noto Serif JP',serif" font-size="15" fill="#A23B2E" font-weight="700">受理</text>
+        </svg>
+      </div>
+
+      <dl class="byline">
+        <div class="field"><dt>巻号</dt><dd>Vol.12 No.4</dd></div>
+        <div class="field"><dt>分類</dt><dd>神経科学 ／ 産業社会論</dd></div>
+        <div class="field"><dt>識別子</dt><dd>DSS-2026-0808-J</dd></div>
+        <div class="field"><dt>言語</dt><dd>日本語</dd></div>
+      </dl>
+    </div>
+
+    <div class="abstract">
+      <div class="abstract-label">要旨 ABSTRACT</div>
+      <p>インターネット上の俗語「ドパガキ」は、ショート動画・SNS・確率型報酬（ガチャ）から絶えずドーパミン的刺激を浴び続け、集中力を持続できなくなった若年層を揶揄する呼称として生まれた。本稿は、この俗語を単なる若者への揶揄表現としてではなく、現代の注意経済が生み出す依存構造を的確に言い当てた民俗的診断概念として位置づけ直す。プラットフォーム設計者自身の証言、発達神経科学の縦断的知見、依存規制の歴史的比較、および国内ガチャ産業の実態を検討した結果、「ドパガキ」的な行動特性はもはや若年層に固有の現象ではなく、パチンコ・ガチャ課金・アダルトサイト利用等を通じて全世代に及んでいることが示唆される。過去の依存性物質が利用者本人に依存を自覚させる身体的兆候を伴っていたのに対し、現代の依存にはその「気づきの契機」が構造的に欠如しており、この欠如こそが「ドパガキ化」を若年層から社会全体へと静かに拡張させている主因であると論じる。</p>
+    </div>
+
+    <article>
+      <section id="sec1">
+        <h2><span class="num">1</span>はじめに――「ドパガキ」という語の登場とその含意</h2>
+        <p>インターネット上には近年、<span class="term-mark">「ドパガキ」</span>という俗語が流通している。ショート動画・ソーシャルゲーム・確率型報酬（ガチャ）から絶え間なくドーパミン的刺激を受け続け、一つの物事に集中し続けることができなくなった若年層を指す蔑称であり、字義通りには「ドーパミンに支配された餓鬼（子供）」を意味する。この語は多くの場合、自制心を欠いた若者を大人が見下す文脈で用いられる。しかし、この蔑称を笑うことができる大人が、現在どれほど存在するだろうか。</p>
+        <p>子ども家庭庁による2023年度調査では、日本の高校生のスマートフォン利用時間は平均して1日6時間を超えると報告されている。同年、日本国内のスマートフォンゲーム市場規模は約1兆4,000億円と推計され、その大半は確率型報酬（ガチャ）による課金から生じている。重課金ユーザーと呼ばれる層の中には、月に数十万円を画面内の抽選に投じる者も存在する。ショート動画・ソーシャルゲーム・ガチャという三つの装置は、いずれも同一の神経基盤に作用しており、これらに日常的に浴し続ける行動様式は、もはや「堕落した若者」に限定された現象とはいえない。</p>
+        <p>人類はこれまで幾度も依存対象と向き合ってきた。阿片には煙が、酒場には倒れた酒瓶が、借金には証文の山があった。依存する本人が、自らの依存状態に気づくための身体的・社会的な手がかりを、過去の依存はいずれも伴っていた。気づきこそが、依存から脱する唯一の出口だったといえる。ところが人類は今、その出口を持たない最初の依存対象と出会っている。煙も、割れた酒瓶も、督促状もない。手のひらに収まる、薄く光る板が一枚あるのみである。本稿の目的は、「ドパガキ」という俗語が的確に言い当てているこの構造――なぜ人類は今回の依存にだけ気づけずにいるのか――を、神経科学と産業構造の両面から検討することにある。</p>
+      </section>
+
+      <section id="sec2">
+        <h2><span class="num">2</span>「ドパガキ」を生み出す装置――設計者自身の証言</h2>
+        <p>「ドパガキ」を生み出す装置は、偶然の産物ではなく意図的な設計の結果である。2018年、後に「無限スクロール」と呼ばれる仕組みを考案したアザ・ラスキンは、英国BBCのインタビューにおいて、自らの発明が利用者から膨大な時間を奪っていると述べた。無限スクロールは、コンテンツの「終わり」という概念そのものを画面上から消去する設計であり、22歳の彼がわずか十数行のコードで実装したこの仕組みが、後の「ドパガキ」的な視聴行動の技術的土台を形作った。</p>
+        <p>同様の証言は他の設計者からも得られている。2007年にFacebook社で「いいね」ボタンの開発に携わったジャスティン・ローゼンスタインは、2017年のインタビューで自らの発明を「中身のない疑似的な快感」と評し、当時すでに自身の端末から依存性の高いアプリケーションを削除していたと述べている。2009年にPull-to-Refresh機能を考案したローレン・ブリヒターは、後年のインタビューでこの機能を「スマートフォンのスロットマシン」と表現した。Google社の元プロダクトマネージャーであるトリスタン・ハリスは、2013年に社内向けに「ユーザーの注意を尊重せよ」と題する資料を作成し、同社の設計方針を内部から問題提起したのち、2年後に退職している。</p>
+        <p>これら設計者に共通するのは、自らが手がけた仕組みが人間の脳に及ぼす作用を認識した時点で、当該サービスから距離を置いた点である。いわば、装置の内側から「ドパガキ」化の構造に気づき、自らその外へ逃れ出た当事者たちであった。しかし、2025年時点でTikTokは利用者1人あたり月平均約360回起動されており、覚醒時間を基準とすると約80分に1度の頻度に相当する。Meta社の複数サービスを併用する利用者からは、年間で1人あたり100ドルを超える広告収益が生じていると推計される。設計者自身が手放した装置を、なお数十億人規模の利用者が日常的に握り続けているという非対称性こそ、「ドパガキ」という語が指し示す現象の輪郭である。</p>
+      </section>
+
+      <section id="sec3">
+        <h2><span class="num">3</span>発達神経科学からみた「ドパガキ」化のメカニズム</h2>
+        <h3>3.1　縦断的MRI研究にみる脳の分岐</h3>
+        <p>「ドパガキ」という俗称は比喩ではなく、脳の発達過程における実際の分岐を伴う現象である可能性が、発達神経科学の知見から示唆されている。発達神経科学者エヴァ・テルツァーの研究チームは、中学1年生169名を対象に3年間にわたり年1回のMRI計測を行う縦断研究を実施した。その結果は2023年に米国医学誌JAMA Pediatricsに掲載され、筆頭著者マリア・マザらは、対象者をSNSを1日に複数回確認する「習慣的チェック群」と、月に数回程度しか確認しない群とに分けて比較した。3年間の追跡の結果、報酬処理に関わる腹側線条体、脅威処理に関わる扁桃体、自制を司る腹外側前頭前野という3領域の発達パターンが両群間で明確に分岐していることが示された。習慣的チェック群では、通知や「いいね」数のわずかな変化に対する神経反応が、年を追うごとに増大する傾向が確認されている。</p>
+        <h3>3.2　承認欲求と報酬系――「いいね」の神経基盤</h3>
+        <p>この分岐の背景を理解する手がかりとして、2016年にカリフォルニア大学ロサンゼルス校のローレン・シャーマンらが実施したfMRI研究が挙げられる。同研究では13歳から18歳の32名を対象に、自身の投稿写真に付された「いいね」数を提示しながら脳活動を計測した。「いいね」が多く付いた場面では、報酬系の中枢である側坐核の活動が顕著に増大し、その反応パターンは金銭的報酬を得た際の脳活動とほぼ判別が困難であったと報告されている。</p>
+        <p>進化心理学が繰り返し指摘してきたように、人間が安定的に社会的関係を維持できる集団規模はおよそ150人程度とされる（いわゆる「ダンバー数」）。これに対し、SNSのフィードには本人と面識のない不特定多数の利用者が並ぶ。100万人の前で「いいね」が30件付いた瞬間、脳がそこから読み取るのは30人が承認したという事実ではなく、残りの99万9,970人が黙って通り過ぎたという事実の方だと考えられる。12歳から18歳という時期は、他者からの評価を認知する脳機能が発達の最終段階を迎える時期であり、この時期に日常的な承認・非承認の信号にさらされ続けることが、「ドパガキ」的な脳の形成に寄与している可能性がある。さらに深刻なのは、12歳の脳には自らが依存しているという感覚を外側から学ぶための比較対象が存在しない点である。同級生も親も、同じ装置を同じ時間使っているためである。</p>
+        <h3>3.3　抑うつ傾向と睡眠時間の変化</h3>
+        <p>心理学者ジーン・トウェンジらが2019年に発表した分析によれば、2005年から2017年にかけて、米国において抑うつ症状を有する12歳から17歳の若年層の割合は約1.5倍に増加したと報告されている。この上昇をスマートフォン利用と直接的に結びつけるか、他の社会的要因に帰すかについては、学術界においてなお議論が続いている。他方、米国において夜間に7時間以上の睡眠を確保できない10代の割合は、2009年から2015年の間に16パーセントポイントから17パーセントポイント程度増加したとする報告があり、この点については比較的一致した知見が得られている。自らが依存しているという事実を、生まれてから一度も外側から見たことがない世代が、いま人類史上初めて成人になろうとしている。</p>
+        <p class="note">※本節で言及した研究成果の一部は、参照元資料に基づく引用であり、正式な学術的引用にあたっては原著論文（JAMA Pediatrics掲載論文、Psychological Science掲載論文等）の直接確認が推奨される。</p>
+      </section>
+
+      <section id="sec4">
+        <h2><span class="num">4</span>なぜ規制が来ないのか――200年の依存規制史との比較</h2>
+        <p>「ドパガキ」的な行動様式に対し、なぜ過去の依存対象に対するような規制が及ばないのか。この問いに答えるには、依存性物質・行為に対する規制の歴史的推移を参照する必要がある。1840年、英国東インド会社は年間約4万チェスト（約2,500トン）のアヘンを中国向けに輸出していた。アヘン貿易に対する国際的な統制が主要な国際会議の議題として取り上げられたのは1909年であり、輸出開始からおよそ半世紀を経てのことであった。たばこ産業においては、1990年代に議会証言でニコチンの依存性を否定していた事実が内部文書によって覆され、2008年には米国たばこ業界が2,060億ドル規模の和解金支払いに応じている。アヘン、たばこ、そして現代の短編動画・SNS――賢い大人たちは、設計、否認、被害の顕在化、規制という同じ筋書きを約200年にわたり繰り返してきた。異なるのは、依存を運ぶ手段が煙管からアルゴリズムへと変わった点のみである。</p>
+        <p>しかし、決定的に異なる点がもう一つある。過去の二例では、本人が自らの依存状態に気づける形を、依存対象自体が備えていた。そして規制は、常に依存の被害がピークを過ぎてから到着していた。アヘンの国際的統制は、貿易開始から69年後に議題化されている。たばこの和解が成立した時には、業界が中毒性を内部で把握していた1950年代からすでに半世紀近くが経過していた。ショート動画とSNSについては、2007年のiPhone登場からおよそ20年を経て、ようやく世界が動き始めている。中国は未成年者のオンラインゲーム利用時間を週3時間に制限し、フランスは校内でのスマートフォン使用を法律により禁止した。米国では41州とワシントンD.C.の司法当局がMeta社を相手取り提訴し、日本では年齢確認制度と事業者による自主規制の組み合わせによる対応が進められている。</p>
+        <p>だが今回の20年間は、過去の規制遅延とは質的に異なる。煙も、割れた酒瓶も、督促状も、机の上には何一つ転がり落ちていない。隣に座る同僚も、向かいに座る家族も、同じ画面を同じ時間見つめている。退屈に耐えられない、集中力が落ちる、寝つきが悪くなる――そうした「ドパガキ」的症状は、依存の兆候としてではなく、いつの間にか現代生活における一般的な感覚そのものに紛れ込んでしまった。</p>
+      </section>
+
+      <section id="sec5">
+        <h2><span class="num">5</span>「ドパガキ」は若者だけか――14兆円産業と全世代への拡大</h2>
+        <p>その装置に書き換えられているのは、12歳の脳だけではない。隣に座る大人の脳もまた、毎日少しずつ同じ依存構造に書き換えられている。日本のパチンコ・パチスロ市場は、現在も年間約14兆円規模の経済を回している。確率型報酬（ガチャ）を搭載したソーシャルゲームの上位タイトルに限っても、国内で年間数千億円規模の売上が生じている。ポルノサイトを日常的に訪れる人の数は、世界で数億人規模に達するとされる。形態も商品も一見ばらばらに見えるこれらの装置が揺さぶっている脳の部位は一つである。「いいね」の度に活性化していた側坐核、すなわち人間が喜びを感じるたびにドーパミンを放出する脳の中枢である。</p>
+        <p>この側坐核を最も精密に揺さぶる装置として完成度を高めてきたのが、ガチャ業界である。2018年、オランダ政府（オランダ賭博監督機構）は主要なガチャ搭載タイトル10本を調査し、そのうち4本を賭博に該当すると判定した。同年、世界保健機関（WHO）は「ゲーム障害」を国際疾病分類（ICD-11）上の疾患として正式に登録している。日本国内では、国民生活センターに寄せられた未成年者による無断ゲーム課金に関する相談件数が、2024年3月時点で年間4,024件に達し、1件あたりの平均購入額は約33万円と報告されている。</p>
+        <p>日本のガチャ業界は、2012年の「コンプガチャ」規制以降、法的規制の範囲内で利用継続率を最大化する設計手法を発展させてきた。1日あたり定数の無料抽選機会の付与、待機時間短縮のための有償通貨、多数回抽選時の確定入手保証（いわゆる「天井」）といった仕組みは、いずれも不確実な報酬への期待を維持しつつ、日々の再訪を促す構造として世代を超えて磨かれてきた。象徴的な事例として、2024年10月にリリースされた『ポケモントレーディングカードゲーム ポケット』は、リリースから4か月で全世界累計1億ダウンロードを達成し、月間アクティブユーザー数は5,100万人を超えた。同タイトルの開発・運営を担う株式会社ディー・エヌ・エーは、前期の赤字から一転して約290億円の営業黒字を計上している。同社は2012年のコンプガチャ規制導入時、自社サービスから当該方式をいち早く撤廃した企業の一つでもあり、その12年後、子供向けIPの上で合法の範囲ギリギリまで最適化されたガチャを完成させたことは、規制と設計技術の追いかけっこという構図を象徴する事例といえる。</p>
+        <p>あなたは自分がこれらに依存していると、当然思っていないかもしれない。なぜなら、同僚も家族も友人も、地下鉄で隣に座る人も、全員が同じ装置を同じ時間使っているからである。これが正常だと、社会が黙って合意してしまった。気づくための足場が、社会全体から消えたのである。かつて「ドパガキ」と揶揄された12歳は、気づかないまま大人になり、気づかないまま次の世代を育てていく。もはやこれは、一部の若者を指す蔑称ではない。全世代が緩やかに「ドパガキ」化しつつある社会の姿である。</p>
+      </section>
+
+      <section id="sec6">
+        <h2><span class="num">6</span>結論――気づかれないまま「ドパガキ」化する社会</h2>
+        <p>結局のところ、賢い大人たちが生み出してきたものとは何だったのか。過去の依存と今日の依存とを分かつ決定的な違いは一つしかない。阿片が、酒が、たばこが、ギャンブルが流行した時代でも、社会の半分はそれに触れずに暮らしていた。家族や同僚には、隣にいる人間の異変を肌で感じ取れる距離があり、本人もまた、酒場に通う回数が増えていく自分を自覚することができた。しかし今は違う。地下鉄の車内も、家庭のリビングも、夜のベッドの中も、人口の9割が同じ画面を見つめている。次の12歳は、今の12歳よりもさらに精密に最適化されたアルゴリズムが支配する画面に、より早い年齢から触れることになるだろう。</p>
+        <p>依存構造からの離脱は、この構造自体に気づき、装置に触れない時間を日常のなかに少しでも確保する人間からしか始まらない。しかし、そのための余白が現在の社会にどれほど残されているかは明らかでない。それを見出すことは、今後数十年にわたる人類の課題として残されている。賢い大人たちが成し遂げてきたことは、突き詰めれば「ドパガキ」の量産といった小さな話ではない。気づかれない依存の中に、全人類を平等に閉じ込めていく――そうした仕事だったのかもしれない。</p>
+      </section>
+
+      <div class="divider" id="refs-divider"><span>参考文献</span></div>
+
+      <section id="refs" class="refs">
+        <ol>
+          <li>子ども家庭庁（2023）『青少年のインターネット利用環境実態調査』令和5年度版。</li>
+          <li>国民生活センター（2024）「子どものオンラインゲーム課金に関する相談件数」。</li>
+          <li>Maza, M. T. et al.（2023）「Association of Habitual Checking Behaviors on Social Media With Longitudinal Functional Brain Development」JAMA Pediatrics.</li>
+          <li>Sherman, L. E. et al.（2016）「The Power of the Like in Adolescence」Psychological Science.</li>
+          <li>Twenge, J. M. et al.（2019）米国青少年における抑うつ症状の経年変化に関する分析。</li>
+          <li>Netherlands Gaming Authority（2018）ガチャ・ルートボックスに関する調査報告。</li>
+          <li>World Health Organization（2018）International Classification of Diseases 11th Revision（ICD-11）：Gaming Disorder.</li>
+        </ol>
+        <p class="note">※上記の一部文献情報は、参照元資料における言及に基づく簡略な記載であり、正式な学術論文としての提出にあたっては、著者名・巻号・頁等の書誌情報を一次資料に照らして再確認されたい。また「ドパガキ」はインターネット上の俗語であり、学術的に確立した診断用語ではない点に留意されたい。</p>
+      </section>
+    </article>
+  </main>
+</div>
+
+<div class="reviewer-box">
+  <div class="reviewer-panel">
+    <div class="reviewer-label">この論文の査読者</div>
+    <div class="reviewer-count" id="reviewerCount">0</div>
+    <div class="reviewer-unit">人</div>
+    <button class="reviewer-btn" id="reviewerBtn">私もこの論文を査読する</button>
+
+    <div class="reviewer-confirm" id="reviewerConfirm">
+      <p class="reviewer-confirm-q">しっかり読みましたか？</p>
+      <div class="reviewer-confirm-actions">
+        <button class="reviewer-yes" id="reviewerYes">はい、読みました</button>
+        <button class="reviewer-no" id="reviewerNo">正直、まだです</button>
+      </div>
+      <p class="liar-msg" id="liarMsg">嘘つき</p>
+    </div>
+
+    <div class="reviewer-note">この人数は、このページを訪れた全員と共有されています。</div>
+    <button class="reviewer-reset" id="reviewerReset">カウントを0にリセット</button>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 デジタル社会研究レビュー編集委員会</span>
+  <span>本稿はレビュー掲載用の組版サンプルです</span>
+</footer>
+
+<script>
+  // reading progress bar
+  const progress = document.getElementById('progress');
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrolled = h.scrollTop;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = (max > 0 ? (scrolled / max) * 100 : 0) + '%';
+  }
+  document.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  // scrollspy for TOC
+  const links = document.querySelectorAll('nav.toc a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const id = '#' + entry.target.id;
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => s && observer.observe(s));
+
+  // reviewer counter — shared, persistent via window.storage
+  const REVIEW_KEY = 'dopagaki_paper_reviewer_count';
+  const countEl = document.getElementById('reviewerCount');
+  const btnEl = document.getElementById('reviewerBtn');
+  const confirmEl = document.getElementById('reviewerConfirm');
+  const yesEl = document.getElementById('reviewerYes');
+  const noEl = document.getElementById('reviewerNo');
+  const liarEl = document.getElementById('liarMsg');
+  const resetEl = document.getElementById('reviewerReset');
+  let currentCount = 0;
+  let storageReady = false;
+
+  function renderCount(n, animate){
+    countEl.textContent = String(n);
+    if(animate){
+      countEl.classList.remove('bump');
+      void countEl.offsetWidth; // restart animation
+      countEl.classList.add('bump');
+    }
+  }
+
+  async function initCounter(){
+    btnEl.disabled = true;
+    try{
+      const res = await window.storage.get(REVIEW_KEY, true);
+      currentCount = res && res.value ? parseInt(res.value, 10) || 0 : 0;
+    }catch(e){
+      // key doesn't exist yet, or storage unavailable — start at 0
+      currentCount = 0;
+    }
+    renderCount(currentCount, false);
+    storageReady = true;
+    btnEl.disabled = false;
+  }
+
+  async function addReviewer(){
+    if(!storageReady) return;
+    btnEl.disabled = true;
+    const next = currentCount + 1;
+    try{
+      const res = await window.storage.set(REVIEW_KEY, String(next), true);
+      if(res){
+        currentCount = next;
+        renderCount(currentCount, true);
+      }
+    }catch(e){
+      console.error('Storage error:', e);
+    }
+    btnEl.disabled = false;
+  }
+
+  function openConfirm(){
+    confirmEl.classList.add('open');
+    btnEl.disabled = true;
+  }
+  function closeConfirm(){
+    confirmEl.classList.remove('open');
+    liarEl.classList.remove('show');
+    btnEl.disabled = false;
+  }
+  function callOutLiar(){
+    document.documentElement.classList.add('inverted');
+    liarEl.classList.add('show');
+  }
+
+  btnEl.addEventListener('click', openConfirm);
+  yesEl.addEventListener('click', () => {
+    callOutLiar();
+  });
+  noEl.addEventListener('click', () => {
+    closeConfirm();
+  });
+
+  resetEl.addEventListener('click', async () => {
+    resetEl.disabled = true;
+    try{
+      const res = await window.storage.set(REVIEW_KEY, '0', true);
+      if(res){
+        currentCount = 0;
+        renderCount(currentCount, true);
+      }
+    }catch(e){
+      console.error('Storage error:', e);
+    }
+    resetEl.disabled = false;
+  });
+
+  initCounter();
+</script>
+
+</body>
+</html>
